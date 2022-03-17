@@ -5,9 +5,9 @@ import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import ClientStyleContext from "./ClientStyleContext";
-import createEmotionCache from "./createEmotionCache";
-import theme from "./theme";
+import ClientStyleContext from "~/styles/ClientStyleContext";
+import createEmotionCache from "~/styles/createEmotionCache";
+import theme from "~/styles/theme";
 
 interface ClientCacheProviderProps {
   children: React.ReactNode;
@@ -29,7 +29,6 @@ function ClientCacheProvider({ children }: ClientCacheProviderProps) {
 hydrate(
   <ClientCacheProvider>
     <ThemeProvider theme={theme}>
-      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
       <RemixBrowser />
     </ThemeProvider>

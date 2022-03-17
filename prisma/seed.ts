@@ -6,30 +6,17 @@ const prisma = new PrismaClient();
 async function seed() {
   const hashedPassword = await bcrypt.hash("mysupergoodpassword", 10);
 
-  const user = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: "you@example.com",
+      firstName: "You",
+      lastName: "Example",
       password: {
         create: {
           hash: hashedPassword,
         },
       },
     },
-  });
-
-  await prisma.note.createMany({
-    data: [
-      {
-        title: "My first note",
-        body: "Hello, world!",
-        userId: user.id,
-      },
-      {
-        title: "My second note",
-        body: "Hello, world!",
-        userId: user.id,
-      },
-    ],
   });
 
   console.log(`Database has been seeded. 🌱`);

@@ -2,11 +2,11 @@ import * as React from "react";
 import type { ActionFunction, LoaderFunction, MetaFunction } from "remix";
 import {
   Form,
-  json,
   Link as RemixLink,
-  useActionData,
   redirect,
   useSearchParams,
+  json,
+  useActionData,
 } from "remix";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -14,11 +14,9 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 
-import { createUserSession, getUserId } from "~/core/session.server";
-import { verifyLogin } from "~/core/user.server";
+import { getUserId, createUserSession } from "~/core/session.server";
+import { createUser, getUserByEmail } from "~/core/user.server";
 import { validateEmail } from "~/utils/email";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -28,9 +26,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 interface ActionData {
-  errors?: {
+  errors: {
     email?: string;
     password?: string;
+    firstName?: string;
+    lastName?: string;
   };
 }
 
@@ -38,8 +38,27 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
+  const firstName = formData.get("firstName");
+  const lastName = formData.get("lastName");
   const redirectTo = formData.get("redirectTo");
-  const remember = formData.get("remember");
+
+  console.log({
+    firstName,
+    lastName,
+  });
+  if (typeof firstName !== "string" || !firstName.length) {
+    return json<ActionData>(
+      { errors: { firstName: "First name is required" } },
+      { status: 400 }
+    );
+  }
+
+  if (typeof lastName !== "string" || !lastName.length) {
+    return json<ActionData>(
+      { errors: { lastName: "Last name is required" } },
+      { status: 400 }
+    );
+  }
 
   if (!validateEmail(email)) {
     return json<ActionData>(
@@ -62,38 +81,50 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const user = await verifyLogin(email, password);
-
-  if (!user) {
+  const existingUser = await getUserByEmail(email);
+  if (existingUser) {
     return json<ActionData>(
-      { errors: { email: "Invalid email or password" } },
+      { errors: { email: "A user already exists with this email" } },
       { status: 400 }
     );
   }
 
+  const user = await createUser({
+    email,
+    password,
+    firstName,
+    lastName,
+  });
+
   return createUserSession({
     request,
     userId: user.id,
-    remember: remember === "on" ? true : false,
-    redirectTo: typeof redirectTo === "string" ? redirectTo : "/notes",
+    remember: false,
+    redirectTo: typeof redirectTo === "string" ? redirectTo : "/",
   });
 };
 
 export const meta: MetaFunction = () => {
   return {
-    title: "Login",
+    title: "Sign Up",
   };
 };
 
-export default function LoginPage() {
+export default function Join() {
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/";
+  const redirectTo = searchParams.get("redirectTo") ?? undefined;
   const actionData = useActionData() as ActionData;
+  const firstNameRef = React.useRef<HTMLInputElement>(null);
+  const lastNameRef = React.useRef<HTMLInputElement>(null);
   const emailRef = React.useRef<HTMLInputElement>(null);
   const passwordRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    if (actionData?.errors?.email) {
+    if (actionData?.errors?.firstName) {
+      firstNameRef.current?.focus();
+    } else if (actionData?.errors?.lastName) {
+      lastNameRef.current?.focus();
+    } else if (actionData?.errors?.email) {
       emailRef.current?.focus();
     } else if (actionData?.errors?.password) {
       passwordRef.current?.focus();
@@ -114,9 +145,36 @@ export default function LoginPage() {
         <Form method="post" noValidate>
           <Box sx={{ my: 3 }}>
             <Typography color="textPrimary" variant="h4">
-              Sign in
+              Create a new account
             </Typography>
           </Box>
+          <TextField
+            inputRef={firstNameRef}
+            error={Boolean(actionData?.errors?.firstName)}
+            fullWidth
+            helperText={
+              actionData?.errors?.firstName && actionData.errors.firstName
+            }
+            label="First Name"
+            margin="normal"
+            name="firstName"
+            type="text"
+            variant="outlined"
+            autoFocus
+          />
+          <TextField
+            inputRef={lastNameRef}
+            error={Boolean(actionData?.errors?.lastName)}
+            fullWidth
+            helperText={
+              actionData?.errors?.lastName && actionData.errors.lastName
+            }
+            label="Last Name"
+            margin="normal"
+            name="lastName"
+            type="text"
+            variant="outlined"
+          />
           <TextField
             inputRef={emailRef}
             error={Boolean(actionData?.errors?.email)}
@@ -128,7 +186,6 @@ export default function LoginPage() {
             type="email"
             variant="outlined"
             autoComplete="email"
-            autoFocus
           />
           <TextField
             inputRef={passwordRef}
@@ -143,11 +200,6 @@ export default function LoginPage() {
             type="password"
             variant="outlined"
             autoComplete="new-password"
-          />
-
-          <FormControlLabel
-            control={<Checkbox id="remember" name="remember" />}
-            label="Remember me"
           />
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
@@ -165,11 +217,11 @@ export default function LoginPage() {
           </Box>
 
           <Typography color="textSecondary" variant="body2">
-            {`Don't nave an account? `}
+            Already have an account?{" "}
             <Link
               component={RemixLink}
               to={{
-                pathname: "/register",
+                pathname: "/login",
                 search: searchParams.toString(),
               }}
               variant="subtitle2"
@@ -178,7 +230,7 @@ export default function LoginPage() {
                 cursor: "pointer",
               }}
             >
-              Sign Up
+              Sign In
             </Link>
           </Typography>
         </Form>

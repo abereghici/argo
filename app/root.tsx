@@ -12,10 +12,10 @@ import {
 import type { LinksFunction, MetaFunction, LoaderFunction } from "remix";
 import { withEmotionCache } from "@emotion/react";
 import { unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
-import theme from "./theme";
-import ClientStyleContext from "./ClientStyleContext";
+import theme from "~/styles/theme";
+import ClientStyleContext from "~/styles/ClientStyleContext";
 
-import { getUser } from "./session.server";
+import { getUser } from "./core/session.server";
 
 interface DocumentProps {
   children: React.ReactNode;
