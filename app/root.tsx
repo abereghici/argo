@@ -14,9 +14,10 @@ import { withEmotionCache } from "@emotion/react";
 import { unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
 import theme from "~/styles/theme";
 import ClientStyleContext from "~/styles/ClientStyleContext";
-
 import { getUser } from "./core/session.server";
-
+import ErrorPage from "~/components/ErrorPage";
+import ForOhFour from "~/components/FourOhFour";
+import Unauthorized from "~/components/Unauthorized";
 interface DocumentProps {
   children: React.ReactNode;
   title?: string;
@@ -108,15 +109,11 @@ export function ErrorBoundary({ error }: { error: Error }) {
 
   return (
     <Document title="Error!">
-      <div>
-        <h1>There was an error</h1>
-        <p>{error.message}</p>
-        <hr />
-        <p>
-          Hey, developer, you should replace this with what you want your users
-          to see.
-        </p>
-      </div>
+      <ErrorPage
+        title="There was an error"
+        subtitle={error.message}
+        imageSrc="/images/error.png"
+      />
     </Document>
   );
 }
@@ -125,20 +122,13 @@ export function ErrorBoundary({ error }: { error: Error }) {
 export function CatchBoundary() {
   const caught = useCatch();
 
-  let message;
+  let component;
   switch (caught.status) {
     case 401:
-      message = (
-        <p>
-          Oops! Looks like you tried to visit a page that you do not have access
-          to.
-        </p>
-      );
+      component = <Unauthorized />;
       break;
     case 404:
-      message = (
-        <p>Oops! Looks like you tried to visit a page that does not exist.</p>
-      );
+      component = <ForOhFour />;
       break;
 
     default:
@@ -147,10 +137,7 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <h1>
-        {caught.status}: {caught.statusText}
-      </h1>
-      {message}
+      {component}
     </Document>
   );
 }
