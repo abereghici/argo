@@ -19,7 +19,15 @@ type Props = {
 };
 
 export default function DashboardLayout({ children }: Props) {
-  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const openSidebar = React.useCallback(() => {
+    setOpen(true);
+  }, [setOpen]);
+
+  const closeSidebar = React.useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
   return (
     <>
@@ -35,8 +43,8 @@ export default function DashboardLayout({ children }: Props) {
           {children}
         </Box>
       </DashboardLayoutRoot>
-      <Navbar onSidebarOpen={() => setSidebarOpen(true)} />
-      <Sidebar onClose={() => setSidebarOpen(false)} open={isSidebarOpen} />
+      <Navbar onSidebarOpen={openSidebar} />
+      <Sidebar onClose={closeSidebar} open={open} />
     </>
   );
 }

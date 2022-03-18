@@ -30,7 +30,7 @@ export default function NavItem({ to, icon, title }: Props) {
         startIcon={icon}
         disableRipple
         sx={{
-          backgroundColor: active ? "rgba(255,255,255, 0.08)" : null,
+          backgroundColor: active ? "grey.50" : null,
           borderRadius: 1,
           color: active ? "secondary.main" : "grey.300",
           fontWeight: active ? "fontWeightBold" : "fontWeightRegular",
@@ -43,7 +43,10 @@ export default function NavItem({ to, icon, title }: Props) {
             color: active ? "secondary.main" : "grey.400",
           },
           "&:hover": {
-            backgroundColor: "rgba(255,255,255, 0.08)",
+            backgroundColor: "grey.50",
+          },
+          "&:focus": {
+            backgroundColor: "action.focus",
           },
         }}
       >

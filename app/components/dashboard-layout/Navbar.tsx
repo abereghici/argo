@@ -4,10 +4,14 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Hidden from "@mui/material/Hidden";
+
+import { SIDEBAR_WIDTH } from "./constants";
+import AccountMenu from "./AccountMenu";
 
 const NavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
   boxShadow: theme.shadows[3],
 }));
 
@@ -21,10 +25,10 @@ export default function Navbar({ onSidebarOpen }: Props) {
       <NavbarRoot
         sx={{
           left: {
-            lg: 280,
+            lg: SIDEBAR_WIDTH,
           },
           width: {
-            lg: "calc(100% - 280px)",
+            lg: `calc(100% - ${SIDEBAR_WIDTH}px)`,
           },
         }}
       >
@@ -36,20 +40,13 @@ export default function Navbar({ onSidebarOpen }: Props) {
             px: 2,
           }}
         >
-          <IconButton
-            onClick={onSidebarOpen}
-            sx={{
-              display: {
-                xs: "inline-flex",
-                lg: "none",
-              },
-            }}
-          >
-            <MenuIcon fontSize="small" />
-          </IconButton>
+          <Hidden mdUp implementation="css">
+            <IconButton onClick={onSidebarOpen}>
+              <MenuIcon fontSize="small" />
+            </IconButton>
+          </Hidden>
           <Box sx={{ flexGrow: 1 }} />
-
-          <AccountCircleIcon fontSize="small" />
+          <AccountMenu />
         </Toolbar>
       </NavbarRoot>
     </>

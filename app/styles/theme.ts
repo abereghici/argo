@@ -123,9 +123,17 @@ const theme = createTheme({
         },
       },
     },
+    MuiDivider: {
+      styleOverrides: {
+        root: {
+          borderColor: "#2D3748",
+        },
+      },
+    },
   },
   palette: {
     grey: {
+      50: "rgba(255,255,255, 0.08)",
       100: "#F3F4F6",
       200: "#E5E7EB",
       300: "#D1D5DB",

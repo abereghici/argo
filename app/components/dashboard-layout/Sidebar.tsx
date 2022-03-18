@@ -1,53 +1,29 @@
 import * as React from "react";
+import { Link } from "remix";
 import type { Theme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Hidden from "@mui/material/Hidden";
+import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import { SIDEBAR_WIDTH } from "./constants";
+import Logo from "../Logo";
 import NavItem from "./NavItem";
 
 const items = [
   {
-    to: "/",
-    icon: <AccountCircleIcon fontSize="small" />,
-    title: "Dashboard",
-  },
-  {
-    to: "/customers",
-    icon: <AccountCircleIcon fontSize="small" />,
-    title: "Customers",
-  },
-  {
-    to: "/products",
-    icon: <AccountCircleIcon fontSize="small" />,
-    title: "Products",
+    to: "/bookmarks",
+    icon: <BookmarkIcon fontSize="small" />,
+    title: "Bookmarks",
   },
   {
     to: "/account",
     icon: <AccountCircleIcon fontSize="small" />,
     title: "Account",
-  },
-  {
-    to: "/settings",
-    icon: <AccountCircleIcon fontSize="small" />,
-    title: "Settings",
-  },
-  {
-    to: "/login",
-    icon: <AccountCircleIcon fontSize="small" />,
-    title: "Login",
-  },
-  {
-    to: "/register",
-    icon: <AccountCircleIcon fontSize="small" />,
-    title: "Register",
-  },
-  {
-    to: "/404",
-    icon: <AccountCircleIcon fontSize="small" />,
-    title: "Error",
   },
 ];
 
@@ -92,6 +68,29 @@ export default function Sidebar({ open, onClose }: Props) {
           height: "100%",
         }}
       >
+        <Box sx={{ p: 3 }}>
+          <Button
+            component={Link}
+            to="/"
+            sx={{
+              "&:focus": {
+                backgroundColor: "action.focus",
+              },
+            }}
+          >
+            <Logo
+              sx={{
+                height: 42,
+                width: 42,
+              }}
+            />
+          </Button>
+        </Box>
+        <Divider
+          sx={{
+            my: 3,
+          }}
+        />
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item) => (
             <NavItem
@@ -115,8 +114,8 @@ export default function Sidebar({ open, onClose }: Props) {
           PaperProps={{
             sx: {
               backgroundColor: "grey.900",
-              color: "#FFFFFF",
-              width: 280,
+              color: "primary.contrastText",
+              width: SIDEBAR_WIDTH,
             },
           }}
           variant="permanent"
@@ -133,8 +132,8 @@ export default function Sidebar({ open, onClose }: Props) {
           PaperProps={{
             sx: {
               backgroundColor: "grey.900",
-              color: "#FFFFFF",
-              width: 280,
+              color: "primary.contrastText",
+              width: SIDEBAR_WIDTH,
             },
           }}
           sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
