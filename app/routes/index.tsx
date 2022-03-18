@@ -1,9 +1,8 @@
 import type { LoaderFunction } from "remix";
 import { json, redirect } from "remix";
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
 
 import { getUserId } from "~/core/session.server";
+import { DashboardLayout } from "~/components/dashboard-layout";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -12,9 +11,5 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Index() {
-  return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>Argo</Box>
-    </Container>
-  );
+  return <DashboardLayout>Test</DashboardLayout>;
 }
