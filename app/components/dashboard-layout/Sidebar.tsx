@@ -10,7 +10,7 @@ import Hidden from "@mui/material/Hidden";
 import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { SIDEBAR_WIDTH } from "./constants";
+import { SIDEBAR_WIDTH } from "./Constants";
 import Logo from "../Logo";
 import NavItem from "./NavItem";
 

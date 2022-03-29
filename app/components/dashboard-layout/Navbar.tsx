@@ -6,7 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import MenuIcon from "@mui/icons-material/Menu";
 import Hidden from "@mui/material/Hidden";
 
-import { SIDEBAR_WIDTH } from "./constants";
+import { SIDEBAR_WIDTH } from "./Constants";
 import AccountMenu from "./AccountMenu";
 
 const NavbarRoot = styled(AppBar)(({ theme }) => ({

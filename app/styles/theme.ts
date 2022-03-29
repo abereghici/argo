@@ -11,6 +11,22 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          "&:focus": {
+            backgroundColor: "rgba(55, 65, 81, 0.12)",
+          },
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#5048E5",
+        },
+      },
+    },
     MuiButton: {
       defaultProps: {
         disableElevation: true,
@@ -127,6 +143,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderColor: "#2D3748",
+        },
+        light: {
+          borderColor: "#E5E7EB",
         },
       },
     },

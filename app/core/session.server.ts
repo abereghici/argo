@@ -6,6 +6,8 @@ import { getUserById } from "~/core/user.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
+const sessionExpirationTime = 1000 * 60 * 60 * 24 * 365; // 1 year
+
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: "__session",
@@ -18,7 +20,7 @@ export const sessionStorage = createCookieSessionStorage({
   },
 });
 
-const USER_SESSION_KEY = "userId";
+export const USER_SESSION_KEY = "userId";
 
 export async function getSession(request: Request) {
   const cookie = request.headers.get("Cookie");
@@ -70,9 +72,7 @@ export async function createUserSession({
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session, {
-        maxAge: remember
-          ? 60 * 60 * 24 * 7 // 7 days
-          : undefined,
+        maxAge: remember ? sessionExpirationTime : undefined,
       }),
     },
   });

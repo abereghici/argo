@@ -10,6 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountIcon from "@mui/icons-material/AccountCircle";
+import Divider from "@mui/material/divider";
 import { useUser } from "~/hooks/useUser";
 
 export default function AccountMenu() {
@@ -50,19 +51,12 @@ export default function AccountMenu() {
             size="small"
             sx={{
               ml: 2,
-              "&:focus": {
-                backgroundColor: "action.focus",
-              },
             }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar
-              sx={{ width: 32, height: 32, backgroundColor: "primary.main" }}
-            >
-              {user.firstName.charAt(0)}
-            </Avatar>
+            <Avatar sizes="32">{user.firstName.charAt(0)}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -90,6 +84,8 @@ export default function AccountMenu() {
           </ListItemIcon>
           <ListItemText>My account</ListItemText>
         </MenuItem>
+
+        <Divider light />
 
         <MenuItem onClick={logout}>
           <ListItemIcon>
